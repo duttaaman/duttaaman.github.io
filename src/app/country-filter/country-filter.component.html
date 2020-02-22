@@ -1,0 +1,68 @@
+<p>country-filter works!</p>
+
+<!-- <form>
+    <input type="text" placeholder="Search for a Country" aria-label="Number" matInput [formControl]="myControl"
+        [(ngModel)]="value">
+    <button mat-button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value='';">Clear</button>
+    {{value}}
+</form> -->
+
+<mat-form-field>
+  <input type="text" placeholder="Enter Location" matInput [formControl]="myControl" [matAutocomplete]="auto">
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)='countryChange($event.option.value)'>
+    <mat-option *ngFor="let country of filteredOptions| async" [value]="country">
+      {{country}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
+
+<div>
+  <button *ngIf="countryName" (click)="compareCountries()">Compare</button>
+</div>
+
+
+<div *ngIf="countryName">
+  <table>
+    <thead>
+      <th colspan="2">Comparison</th>
+    </thead>
+    <tbody>
+
+      <tr *ngFor="let k of selected | keyvalue">
+        <td>{{k.key}}</td>
+        <td *ngIf="k.key!='flag' && k.key!='currencies' && k.key!='regionalBlocs' && k.key!='languages' &&
+          k.key!=='translations'; else differ">{{k.value}}</td>
+
+        <ng-template #differ>
+          <ng-container *ngIf="k.key=='translations'; else obj">
+            <td>
+              <p *ngFor="let v of k.value | keyvalue; let i=index"> {{v.key}} : {{v.value}}</p>
+            </td>
+          </ng-container>
+
+        </ng-template>
+
+        <ng-template #obj>
+          <ng-container *ngIf="k.key!='flag'; else flag">
+            <td>
+              <div *ngFor="let a of k.value; ">
+                <p *ngFor="let v of a | keyvalue; let i=index"> {{v.key}} : {{v.value}} </p>
+              </div>
+          </ng-container>
+
+        </ng-template>
+
+        <ng-template #flag>
+          <td> <img src={{selected.flag}}></td>
+        </ng-template>
+
+      </tr>
+      
+    </tbody>
+
+  </table>
+
+
+
+
+</div>
